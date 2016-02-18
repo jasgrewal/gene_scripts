@@ -1,10 +1,9 @@
-
 #######################
 #load data
 #######################
 
 #load CESC mRNA-Seq data
-data=read.table("~/Desktop/R_Workshop4/CESC.rnaseqv2__illuminahiseq_rnaseqv2__unc_edu__Level_3__RSEM_genes_normalized__data.data.txt", row.names=1, header=T, check.names=F, sep="\t") #check.names=F makes it so R leaves the names as is
+data=read.table("/Users/jgrewal/mygits/gene_scripts/r_hierarchical_17022016/data/gdac.broadinstitute.org_CESC.Merge_rnaseqv2__illuminahiseq_rnaseqv2__unc_edu__Level_3__RSEM_genes_normalized__data.Level_3.2015110100.0.0/CESC.rnaseqv2__illuminahiseq_rnaseqv2__unc_edu__Level_3__RSEM_genes_normalized__data.data.txt", row.names=1, header=T, check.names=F, sep="\t") #check.names=F makes it so R leaves the names as is
 head(data)
 # TCGA-2W-A8YY-01A-11R-A37O-07 TCGA-4J-AA1J-01A-21R-A38B-07 TCGA-BI-A0VR-01A-11R-A10U-07
 # ?|100130426                       0.0000                       0.0000                       0.0000
@@ -15,7 +14,7 @@ head(data)
 # ?|136542                          0.0000                       0.0000                       0.0000
 
 #load covariates
-covariates=read.table("~/Desktop/R_Workshop4/CESC_covariates.formatted.subset.txt", row.names=1, header=T, sep="\t")
+covariates=read.table("/Users/jgrewal/mygits/gene_scripts/r_hierarchical_17022016/data/CESC_covariates.formatted.subset.txt", row.names=1, header=T, sep="\t")
 head(covariates)
 # Histology    HPV_status
 # TCGA-FU-A3EO-01A-11R-A213-07 Adenocarcinoma indeterminate
@@ -39,7 +38,7 @@ cv=apply(mat0,1,sd)/apply(mat0,1,mean) #coefficient of variation
 mat0=subset(mat0,cv>quantile(cv,probs=.75)) #top 25% most variable with mean > meanthresh
 
 #log-transform
-mat1=log2(mat0+1)
+mat1=log2(mat0+1) #Add 1 to treat the 0 values properly with log transform
 #median center
 mat2=sweep(mat1, 1, apply(mat1,1,median,na.rm=T), "-") 
 
@@ -86,7 +85,7 @@ for (k in 2:10) {
 }
 
 #######################
-#Consenesus Cluster Plus
+#Consensus Cluster Plus
 #https://www.bioconductor.org/packages/3.3/bioc/vignettes/ConsensusClusterPlus/inst/doc/ConsensusClusterPlus.pdf
 #######################
 library("ConsensusClusterPlus")
